@@ -1,8 +1,8 @@
-const LUSKAD_API_BASE_URL = "https://app.luskad.com/api/v1";
 
-export async function listProjects(apiKey: string): Promise<any | null> {
+
+export async function listProjects(apiUrl: string, apiKey: string): Promise<any | null> {
   try {
-    const url = new URL(`${LUSKAD_API_BASE_URL}/projects`);
+    const url = new URL(`${apiUrl}/projects`);
     const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -20,12 +20,13 @@ export async function listProjects(apiKey: string): Promise<any | null> {
 }
 
 export async function fetchCodingRules(
+  apiUrl: string,
+  apiKey: string,
   projectId: string,
-  query: string | undefined,
-  apiKey: string
+  query: string | undefined
 ): Promise<any | null> {
   try {
-    const url = new URL(`${LUSKAD_API_BASE_URL}/projects/${projectId}/coding_rules`);
+    const url = new URL(`${apiUrl}/projects/${projectId}/coding_rules`);
     if (query) {
       url.searchParams.set("q", query);
     }

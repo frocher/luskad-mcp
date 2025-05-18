@@ -5,11 +5,30 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import dotenv from "dotenv";
 import { listProjects, fetchCodingRules } from "./lib/api.js";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
 
 // Load environment variables from .env file if present
 dotenv.config();
 
-const LUSKAD_API_KEY = process.env.LUSKAD_API_KEY || process.argv[2];
+// Parse command line arguments
+const argv = yargs(hideBin(process.argv))
+  .option("url", {
+    type: "string",
+    description: "API URL",
+  })
+  .option("key", {
+    type: "string",
+    description: "API Key",
+  })
+  .parseSync();
+
+let LUSKAD_API_URL = argv.url || process.env.API_URL;
+const LUSKAD_API_KEY = argv.key || process.env.API_KEY;
+
+if (!LUSKAD_API_URL) {
+  LUSKAD_API_URL = "https://app.luskad.com/api/v1";
+}
 
 if (!LUSKAD_API_KEY) {
   throw new Error(
@@ -17,18 +36,6 @@ if (!LUSKAD_API_KEY) {
   );
 }
 
-// Get DEFAULT_MINIMUM_TOKENS from environment variable or use default
-let DEFAULT_MINIMUM_TOKENS = 10000;
-if (process.env.DEFAULT_MINIMUM_TOKENS) {
-  const parsedValue = parseInt(process.env.DEFAULT_MINIMUM_TOKENS, 10);
-  if (!isNaN(parsedValue) && parsedValue > 0) {
-    DEFAULT_MINIMUM_TOKENS = parsedValue;
-  } else {
-    console.warn(
-      `Warning: Invalid DEFAULT_MINIMUM_TOKENS value provided in environment variable. Using default value of 10000`
-    );
-  }
-}
 
 // Create server instance
 const server = new McpServer({
@@ -43,7 +50,7 @@ const server = new McpServer({
 });
 
 server.tool("list-projects", "List all projects", async () => {
-  return await listProjects(LUSKAD_API_KEY);
+  return await listProjects(LUSKAD_API_URL, LUSKAD_API_KEY);
 });
 
 server.tool(
@@ -54,7 +61,7 @@ server.tool(
     query: z.string().optional().describe("The query to search for coding rules"),
   },
   async ({ projectId, query }) => {
-    return await fetchCodingRules(projectId, query, LUSKAD_API_KEY);
+    return await fetchCodingRules(LUSKAD_API_URL, LUSKAD_API_KEY, projectId, query);
   }
 );
 
