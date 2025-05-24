@@ -28,7 +28,7 @@ Pasting the following configuration into your Cursor `~/.cursor/mcp.json` file i
   "mcpServers": {
     "Luskad": {
       "command": "npx",
-      "args": ["-y", "@acmada/luskad-mcpp@latest"]
+      "args": ["-y", "@acmada/luskad-mcp"]
     }
   }
 }
@@ -36,11 +36,35 @@ Pasting the following configuration into your Cursor `~/.cursor/mcp.json` file i
 
 ### Install in Windsurf
 
-TODO
+Add this to your Windsurf MCP config file. See [Windsurf MCP docs](https://docs.windsurf.com/windsurf/mcp) for more info.
+
+```json
+{
+  "mcpServers": {
+    "luskad": {
+      "command": "npx",
+      "args": ["-y", "@acmada/luskad-mcp"]
+    }
+  }
+}
+```
+
 
 ### Install in VSCode
 
-TODO
+Add this to your VS Code MCP config file. See [VS Code MCP docs](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) for more info.
+
+```json
+{
+  "servers": {
+    "luskad": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@acmada/luskad-mcp"]
+    }
+  }
+}
+```
 
 ### Install in Claude Desktop
 
@@ -49,9 +73,9 @@ Add this to your Claude Desktop `claude_desktop_config.json` file. See [Claude D
 ```json
 {
   "mcpServers": {
-    "Luskad": {
+    "luskad": {
       "command": "npx",
-      "args": ["-y", "@acmada/luskad-mcp@latest"]
+      "args": ["-y", "@acmada/luskad-mcp"]
     }
   }
 }
@@ -106,7 +130,11 @@ node dist/index.js --url http://your-api-url --key <your api key>
   "mcpServers": {
     "luskad": {
       "command": "npx",
-      "args": ["tsx", "/path/to/folder/luskad-mcp/src/index.ts"]
+      "args": [
+        "tsx", "/path/to/folder/luskad-mcp/src/index.ts",
+        "--url", "http://localhost:3000/api/v1",
+        "--key", "<your personal key>"
+      ]
     }
   }
 }
