@@ -36,7 +36,6 @@ if (!LUSKAD_API_KEY) {
   );
 }
 
-
 // Create server instance
 const server = new McpServer({
   name: "Luskad",
@@ -50,7 +49,27 @@ const server = new McpServer({
 });
 
 server.tool("list-projects", "List all projects", async () => {
-  return await listProjects(LUSKAD_API_URL, LUSKAD_API_KEY);
+  const data = await listProjects(LUSKAD_API_URL, LUSKAD_API_KEY);
+
+  if (!data) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: "Failed to retrieve themes data",
+        },
+      ],
+    };
+  }
+
+  return {
+    content: [
+      {
+        type: "text",
+        text: JSON.stringify(data, null, 2),
+      },
+    ],
+  };
 });
 
 server.tool(
@@ -61,7 +80,27 @@ server.tool(
     query: z.string().optional().describe("The query to search for coding rules"),
   },
   async ({ projectId, query }) => {
-    return await fetchCodingRules(LUSKAD_API_URL, LUSKAD_API_KEY, projectId, query);
+    const data = await fetchCodingRules(LUSKAD_API_URL, LUSKAD_API_KEY, projectId, query);
+
+    if (!data) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: "Failed to retrieve coding rules",
+          },
+        ],
+      };
+    }
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(data, null, 2),
+        },
+      ],
+    };
   }
 );
 
