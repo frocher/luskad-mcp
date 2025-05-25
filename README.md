@@ -15,6 +15,8 @@ A Model Context Protocol (MCP) server that provides access to coding rules and e
 - npm or yarn
 - Cursor, Windsurf, Claude Desktop or another MCP Client
 
+You also need to create an account on [luskad.com application](https://app.luskad.com) and generate your API token.
+
 ## Getting started
 
 ### Install in Cursor
