@@ -4,7 +4,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import dotenv from "dotenv";
-import { listProjects, fetchCodingRules } from "./lib/api.js";
+import { listProjects, fetchCodingRules, fetchRisks, fetchTasks } from "./lib/api.js";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
@@ -88,6 +88,70 @@ server.tool(
           {
             type: "text",
             text: "Failed to retrieve coding rules",
+          },
+        ],
+      };
+    }
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(data, null, 2),
+        },
+      ],
+    };
+  }
+);
+
+server.tool(
+  "get-risks",
+  "Fetch risks for a project",
+  {
+    projectId: z.string().describe("The ID of the project to fetch risks for"),
+    query: z.string().optional().describe("The query to search for risks"),
+  },
+  async ({ projectId, query }) => {
+    const data = await fetchRisks(LUSKAD_API_URL, LUSKAD_API_KEY, projectId, query);
+
+    if (!data) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: "Failed to retrieve risks",
+          },
+        ],
+      };
+    }
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(data, null, 2),
+        },
+      ],
+    };
+  }
+);
+
+server.tool(
+  "get-tasks",
+  "Fetch tasks for a project",
+  {
+    projectId: z.string().describe("The ID of the project to fetch tasks for"),
+    query: z.string().optional().describe("The query to search for tasks"),
+  },
+  async ({ projectId, query }) => {
+    const data = await fetchTasks(LUSKAD_API_URL, LUSKAD_API_KEY, projectId, query);
+
+    if (!data) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: "Failed to retrieve tasks",
           },
         ],
       };

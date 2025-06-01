@@ -45,3 +45,57 @@ export async function fetchCodingRules(
     return null;
   }
 }
+
+export async function fetchRisks(
+  apiUrl: string,
+  apiKey: string,
+  projectId: string,
+  query: string | undefined
+): Promise<any | null> {
+  try {
+    const url = new URL(`${apiUrl}/projects/${projectId}/risks`);
+    if (query) {
+      url.searchParams.set("q", query);
+    }
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+    });
+    if (!response.ok) {
+      console.error(`Failed to fetch risks: ${response.status}`);
+      return null;
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching risks:", error);
+    return null;
+  }
+}
+
+export async function fetchTasks(
+  apiUrl: string,
+  apiKey: string,
+  projectId: string,
+  query: string | undefined
+): Promise<any | null> {
+  try {
+    const url = new URL(`${apiUrl}/projects/${projectId}/tasks`);
+    if (query) {
+      url.searchParams.set("q", query);
+    }
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+    });
+    if (!response.ok) {
+      console.error(`Failed to fetch tasks: ${response.status}`);
+      return null;
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    return null;
+  }
+}
