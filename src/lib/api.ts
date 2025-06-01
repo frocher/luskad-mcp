@@ -1,22 +1,33 @@
-
-
-export async function listProjects(apiUrl: string, apiKey: string): Promise<any | null> {
+// Helper for GET requests with optional query
+async function fetchFromApi(
+  apiUrl: string,
+  apiKey: string,
+  path: string,
+  query?: string
+): Promise<any | null> {
   try {
-    const url = new URL(`${apiUrl}/projects`);
+    const url = new URL(`${apiUrl}${path}`);
+    if (query) {
+      url.searchParams.set("q", query);
+    }
     const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${apiKey}`,
       },
     });
     if (!response.ok) {
-      console.error(`Failed to list projects: ${response.status}`);
+      console.error(`Failed to fetch ${path}: ${response.status}`);
       return null;
     }
     return await response.json();
   } catch (error) {
-    console.error("Error listing projects:", error);
+    console.error(`Error fetching ${path}:`, error);
     return null;
   }
+}
+
+export async function listProjects(apiUrl: string, apiKey: string): Promise<any | null> {
+  return fetchFromApi(apiUrl, apiKey, "/projects");
 }
 
 export async function fetchCodingRules(
@@ -25,25 +36,7 @@ export async function fetchCodingRules(
   projectId: string,
   query: string | undefined
 ): Promise<any | null> {
-  try {
-    const url = new URL(`${apiUrl}/projects/${projectId}/coding_rules`);
-    if (query) {
-      url.searchParams.set("q", query);
-    }
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-      },
-    });
-    if (!response.ok) {
-      console.error(`Failed to fetch coding rules: ${response.status}`);
-      return null;
-    }
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching coding rules:", error);
-    return null;
-  }
+  return fetchFromApi(apiUrl, apiKey, `/projects/${projectId}/coding_rules`, query);
 }
 
 export async function fetchRisks(
@@ -52,25 +45,7 @@ export async function fetchRisks(
   projectId: string,
   query: string | undefined
 ): Promise<any | null> {
-  try {
-    const url = new URL(`${apiUrl}/projects/${projectId}/risks`);
-    if (query) {
-      url.searchParams.set("q", query);
-    }
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-      },
-    });
-    if (!response.ok) {
-      console.error(`Failed to fetch risks: ${response.status}`);
-      return null;
-    }
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching risks:", error);
-    return null;
-  }
+  return fetchFromApi(apiUrl, apiKey, `/projects/${projectId}/risks`, query);
 }
 
 export async function fetchTasks(
@@ -79,23 +54,5 @@ export async function fetchTasks(
   projectId: string,
   query: string | undefined
 ): Promise<any | null> {
-  try {
-    const url = new URL(`${apiUrl}/projects/${projectId}/tasks`);
-    if (query) {
-      url.searchParams.set("q", query);
-    }
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-      },
-    });
-    if (!response.ok) {
-      console.error(`Failed to fetch tasks: ${response.status}`);
-      return null;
-    }
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching tasks:", error);
-    return null;
-  }
+  return fetchFromApi(apiUrl, apiKey, `/projects/${projectId}/tasks`, query);
 }

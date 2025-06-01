@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import { listProjects, fetchCodingRules, fetchRisks, fetchTasks } from "./lib/api.js";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
 // Load environment variables from .env file if present
 dotenv.config();
@@ -48,25 +49,20 @@ const server = new McpServer({
   },
 });
 
+function handleApiToolResult(data: any, errorText: string = "Failed to retrieve data") {
+  if (!data) {
+    return errorText;
+  }
+  return JSON.stringify(data, null, 2);
+}
+
 server.tool("list-projects", "List all projects", async () => {
   const data = await listProjects(LUSKAD_API_URL, LUSKAD_API_KEY);
-
-  if (!data) {
-    return {
-      content: [
-        {
-          type: "text",
-          text: "Failed to retrieve themes data",
-        },
-      ],
-    };
-  }
-
   return {
     content: [
       {
         type: "text",
-        text: JSON.stringify(data, null, 2),
+        text: handleApiToolResult(data, "Failed to retrieve projects"),
       },
     ],
   };
@@ -81,23 +77,11 @@ server.tool(
   },
   async ({ projectId, query }) => {
     const data = await fetchCodingRules(LUSKAD_API_URL, LUSKAD_API_KEY, projectId, query);
-
-    if (!data) {
-      return {
-        content: [
-          {
-            type: "text",
-            text: "Failed to retrieve coding rules",
-          },
-        ],
-      };
-    }
-
     return {
       content: [
         {
           type: "text",
-          text: JSON.stringify(data, null, 2),
+          text: handleApiToolResult(data, "Failed to retrieve coding rules"),
         },
       ],
     };
@@ -113,23 +97,11 @@ server.tool(
   },
   async ({ projectId, query }) => {
     const data = await fetchRisks(LUSKAD_API_URL, LUSKAD_API_KEY, projectId, query);
-
-    if (!data) {
-      return {
-        content: [
-          {
-            type: "text",
-            text: "Failed to retrieve risks",
-          },
-        ],
-      };
-    }
-
     return {
       content: [
         {
           type: "text",
-          text: JSON.stringify(data, null, 2),
+          text: handleApiToolResult(data, "Failed to retrieve risks"),
         },
       ],
     };
@@ -145,23 +117,11 @@ server.tool(
   },
   async ({ projectId, query }) => {
     const data = await fetchTasks(LUSKAD_API_URL, LUSKAD_API_KEY, projectId, query);
-
-    if (!data) {
-      return {
-        content: [
-          {
-            type: "text",
-            text: "Failed to retrieve tasks",
-          },
-        ],
-      };
-    }
-
     return {
       content: [
         {
           type: "text",
-          text: JSON.stringify(data, null, 2),
+          text: handleApiToolResult(data, "Failed to retrieve tasks"),
         },
       ],
     };
