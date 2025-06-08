@@ -56,3 +56,19 @@ export async function fetchTasks(
 ): Promise<any | null> {
   return fetchFromApi(apiUrl, apiKey, `/projects/${projectId}/tasks`, query);
 }
+
+export async function fetchTeamMembers(
+  apiUrl: string,
+  apiKey: string,
+  projectId: string
+): Promise<any | null> {
+  return fetchFromApi(apiUrl, apiKey, `/projects/${projectId}/team_members`);
+}
+
+export async function fetchFeatures(
+  apiUrl: string,
+  apiKey: string,
+  projectId: string
+): Promise<any | null> {
+  return fetchFromApi(apiUrl, apiKey, `/projects/${projectId}/features`);
+}

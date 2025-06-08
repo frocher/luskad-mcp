@@ -4,10 +4,16 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import dotenv from "dotenv";
-import { listProjects, fetchCodingRules, fetchRisks, fetchTasks } from "./lib/api.js";
+import {
+  listProjects,
+  fetchCodingRules,
+  fetchFeatures,
+  fetchRisks,
+  fetchTasks,
+  fetchTeamMembers,
+} from "./lib/api.js";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
 // Load environment variables from .env file if present
 dotenv.config();
@@ -89,6 +95,25 @@ server.tool(
 );
 
 server.tool(
+  "get-features",
+  "Fetch features and issues for a project",
+  {
+    projectId: z.string().describe("The ID of the project to fetch features for"),
+  },
+  async ({ projectId }) => {
+    const data = await fetchFeatures(LUSKAD_API_URL, LUSKAD_API_KEY, projectId);
+    return {
+      content: [
+        {
+          type: "text",
+          text: handleApiToolResult(data, "Failed to retrieve team members"),
+        },
+      ],
+    };
+  }
+);
+
+server.tool(
   "get-risks",
   "Fetch risks for a project",
   {
@@ -122,6 +147,25 @@ server.tool(
         {
           type: "text",
           text: handleApiToolResult(data, "Failed to retrieve tasks"),
+        },
+      ],
+    };
+  }
+);
+
+server.tool(
+  "get-team-members",
+  "Fetch team members for a project",
+  {
+    projectId: z.string().describe("The ID of the project to fetch team members for"),
+  },
+  async ({ projectId }) => {
+    const data = await fetchTeamMembers(LUSKAD_API_URL, LUSKAD_API_KEY, projectId);
+    return {
+      content: [
+        {
+          type: "text",
+          text: handleApiToolResult(data, "Failed to retrieve team members"),
         },
       ],
     };
