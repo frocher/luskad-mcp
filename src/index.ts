@@ -113,7 +113,7 @@ function createServerInstance() {
         content: [
           {
             type: "text",
-            text: handleApiToolResult(data, "Failed to retrieve team members"),
+            text: handleApiToolResult(data, "Failed to retrieve features"),
           },
         ],
       };
