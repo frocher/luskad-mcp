@@ -8,6 +8,8 @@ import { z } from "zod";
 import dotenv from "dotenv";
 import {
   listProjects,
+  fetchThroughput,
+  fetchBuildTime,
   fetchCodingRules,
   fetchFeatures,
   fetchRisks,
@@ -69,6 +71,12 @@ function createServerInstance() {
     },
   });
 
+  server.tool("get-current-date", "Get the current date", async () => {
+    return {
+      content: [{ type: "text", text: new Date().toISOString() }],
+    };
+  });
+
   server.tool("list-projects", "List all projects", async () => {
     const data = await listProjects(LUSKAD_API_URL, LUSKAD_API_KEY);
     return {
@@ -80,6 +88,60 @@ function createServerInstance() {
       ],
     };
   });
+
+  server.tool(
+    "get-throughput",
+    "Get the throughput for a project and a given period",
+    {
+      projectId: z.string().describe("The ID of the project to get the throughput for"),
+      startDate: z.string().describe("The start date of the period to get the throughput for"),
+      endDate: z.string().describe("The end date of the period to get the throughput for"),
+    },
+    async ({ projectId, startDate, endDate }) => {
+      const data = await fetchThroughput(
+        LUSKAD_API_URL,
+        LUSKAD_API_KEY,
+        projectId,
+        startDate,
+        endDate
+      );
+      return {
+        content: [
+          {
+            type: "text",
+            text: handleApiToolResult(data, "Failed to retrieve throughput"),
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "get-build-time",
+    "Get the build time in days for a project and a given period",
+    {
+      projectId: z.string().describe("The ID of the project to get the throughput for"),
+      startDate: z.string().describe("The start date of the period to get the throughput for"),
+      endDate: z.string().describe("The end date of the period to get the throughput for"),
+    },
+    async ({ projectId, startDate, endDate }) => {
+      const data = await fetchBuildTime(
+        LUSKAD_API_URL,
+        LUSKAD_API_KEY,
+        projectId,
+        startDate,
+        endDate
+      );
+      return {
+        content: [
+          {
+            type: "text",
+            text: handleApiToolResult(data, "Failed to retrieve build time"),
+          },
+        ],
+      };
+    }
+  );
 
   server.tool(
     "get-coding-rules",
