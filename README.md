@@ -1,5 +1,13 @@
 # Luskad MCP
 
+⚠️ **DEPRECATED** ⚠️
+
+This project is deprecated. The MCP server is now directly integrated in the Luskad webapp.
+
+---
+
+# Luskad MCP
+
 A Model Context Protocol (MCP) server that provides access to coding rules and examples for your projects.
 
 ## Features
