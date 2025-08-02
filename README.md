@@ -4,10 +4,13 @@ A Model Context Protocol (MCP) server that provides access to coding rules and e
 
 ## Features
 
-- Retrieve all available projects
-- Search coding rules within a specific project
-- Configurable API endpoint
-- Environment variable support
+- **Project Management**: Retrieve all available projects with their details
+- **Coding Rules**: Search and access coding standards within specific projects
+- **Team Collaboration**: Get team member information and project contacts
+- **Progress Tracking**: Monitor project progress, risks, and tasks
+- **Feature Management**: Access project features and their associated issues
+- **Flexible Configuration**: Support for environment variables and command-line arguments
+- **Multi-Platform**: Compatible with Cursor, Windsurf, VS Code, and Claude Desktop
 
 ## Prerequisites
 
