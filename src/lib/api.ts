@@ -28,36 +28,39 @@ async function fetchFromApi(
   }
 }
 
+/**
+ * List all projects
+ * @param apiUrl - The base URL of the API
+ * @param apiKey - The API key
+ * @returns A promise that resolves to the list of projects
+ */
 export async function listProjects(apiUrl: string, apiKey: string): Promise<any | null> {
   return fetchFromApi(apiUrl, apiKey, "/projects");
 }
 
-export async function fetchThroughput(
+/**
+ * Fetch all contacts for a project
+ * @param apiUrl - The base URL of the API
+ * @param apiKey - The API key
+ * @param projectId - The ID of the project
+ * @returns A promise that resolves to the list of contacts
+ */
+export async function fetchContacts(
   apiUrl: string,
   apiKey: string,
-  projectId: string,
-  startDate: string,
-  endDate: string
+  projectId: string
 ): Promise<any | null> {
-  return fetchFromApi(apiUrl, apiKey, `/projects/${projectId}/throughput`, [
-    { key: "start_date", value: startDate },
-    { key: "end_date", value: endDate },
-  ]);
+  return fetchFromApi(apiUrl, apiKey, `/projects/${projectId}/contacts`);
 }
 
-export async function fetchBuildTime(
-  apiUrl: string,
-  apiKey: string,
-  projectId: string,
-  startDate: string,
-  endDate: string
-): Promise<any | null> {
-  return fetchFromApi(apiUrl, apiKey, `/projects/${projectId}/build_time`, [
-    { key: "start_date", value: startDate },
-    { key: "end_date", value: endDate },
-  ]);
-}
-
+/**
+ * Fetch all coding rules for a project
+ * @param apiUrl - The base URL of the API
+ * @param apiKey - The API key
+ * @param projectId - The ID of the project
+ * @param query - The query string
+ * @returns A promise that resolves to the list of coding rules
+ */
 export async function fetchCodingRules(
   apiUrl: string,
   apiKey: string,
@@ -72,6 +75,51 @@ export async function fetchCodingRules(
   );
 }
 
+/**
+ * Fetch planning for a project
+ * @param apiUrl - The base URL of the API
+ * @param apiKey - The API key
+ * @param projectId - The ID of the project
+ * @returns A promise that resolves to the list of contacts
+ */
+export async function fetchPlanning(
+  apiUrl: string,
+  apiKey: string,
+  projectId: string
+): Promise<any | null> {
+  return fetchFromApi(apiUrl, apiKey, `/projects/${projectId}/planning`);
+}
+
+/**
+ * Fetch progress for a project
+ * @param apiUrl - The base URL of the API
+ * @param apiKey - The API key
+ * @param projectId - The ID of the project
+ * @param query - The query string
+ * @returns A promise that resolves to the list of progress
+ */
+export async function fetchProgress(
+  apiUrl: string,
+  apiKey: string,
+  projectId: string,
+  query: string | undefined
+): Promise<any | null> {
+  return fetchFromApi(
+    apiUrl,
+    apiKey,
+    `/projects/${projectId}/progress`,
+    query ? [{ key: "q", value: query }] : undefined
+  );
+}
+
+/**
+ * Fetch all risks for a project
+ * @param apiUrl - The base URL of the API
+ * @param apiKey - The API key
+ * @param projectId - The ID of the project
+ * @param query - The query string
+ * @returns A promise that resolves to the list of risks
+ */
 export async function fetchRisks(
   apiUrl: string,
   apiKey: string,
@@ -86,6 +134,14 @@ export async function fetchRisks(
   );
 }
 
+/**
+ * Fetch all tasks for a project
+ * @param apiUrl - The base URL of the API
+ * @param apiKey - The API key
+ * @param projectId - The ID of the project
+ * @param query - The query string
+ * @returns A promise that resolves to the list of tasks
+ */
 export async function fetchTasks(
   apiUrl: string,
   apiKey: string,
@@ -100,6 +156,13 @@ export async function fetchTasks(
   );
 }
 
+/**
+ * Fetch all team members for a project
+ * @param apiUrl - The base URL of the API
+ * @param apiKey - The API key
+ * @param projectId - The ID of the project
+ * @returns A promise that resolves to the list of team members
+ */
 export async function fetchTeamMembers(
   apiUrl: string,
   apiKey: string,
@@ -108,6 +171,13 @@ export async function fetchTeamMembers(
   return fetchFromApi(apiUrl, apiKey, `/projects/${projectId}/team_members`);
 }
 
+/**
+ * Fetch all features for a project
+ * @param apiUrl - The base URL of the API
+ * @param apiKey - The API key
+ * @param projectId - The ID of the project
+ * @returns A promise that resolves to the list of features
+ */
 export async function fetchFeatures(
   apiUrl: string,
   apiKey: string,

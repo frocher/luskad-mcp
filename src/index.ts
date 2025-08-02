@@ -8,10 +8,11 @@ import { z } from "zod";
 import dotenv from "dotenv";
 import {
   listProjects,
-  fetchThroughput,
-  fetchBuildTime,
   fetchCodingRules,
+  fetchContacts,
   fetchFeatures,
+  fetchPlanning,
+  fetchProgress,
   fetchRisks,
   fetchTasks,
   fetchTeamMembers,
@@ -63,7 +64,8 @@ function handleApiToolResult(data: any, errorText: string = "Failed to retrieve 
 function createServerInstance() {
   const server = new McpServer({
     name: "Luskad",
-    description: "Luskad is a tool that allows you to search for and retrieve information from the Luskad API.",
+    description:
+      "Luskad is a tool that allows you to search for and retrieve information from the Luskad API.",
     version: "1.0.0",
     capabilities: {
       resources: {},
@@ -90,60 +92,6 @@ function createServerInstance() {
   });
 
   server.tool(
-    "get-throughput",
-    "Get the throughput for a project and a given period",
-    {
-      projectId: z.string().describe("The ID of the project to get the throughput for"),
-      startDate: z.string().describe("The start date of the period to get the throughput for"),
-      endDate: z.string().describe("The end date of the period to get the throughput for"),
-    },
-    async ({ projectId, startDate, endDate }) => {
-      const data = await fetchThroughput(
-        LUSKAD_API_URL,
-        LUSKAD_API_KEY,
-        projectId,
-        startDate,
-        endDate
-      );
-      return {
-        content: [
-          {
-            type: "text",
-            text: handleApiToolResult(data, "Failed to retrieve throughput"),
-          },
-        ],
-      };
-    }
-  );
-
-  server.tool(
-    "get-build-time",
-    "Get the build time in days for a project and a given period",
-    {
-      projectId: z.string().describe("The ID of the project to get the throughput for"),
-      startDate: z.string().describe("The start date of the period to get the throughput for"),
-      endDate: z.string().describe("The end date of the period to get the throughput for"),
-    },
-    async ({ projectId, startDate, endDate }) => {
-      const data = await fetchBuildTime(
-        LUSKAD_API_URL,
-        LUSKAD_API_KEY,
-        projectId,
-        startDate,
-        endDate
-      );
-      return {
-        content: [
-          {
-            type: "text",
-            text: handleApiToolResult(data, "Failed to retrieve build time"),
-          },
-        ],
-      };
-    }
-  );
-
-  server.tool(
     "get-coding-rules",
     "Fetch coding rules for a project",
     {
@@ -164,6 +112,25 @@ function createServerInstance() {
   );
 
   server.tool(
+    "get-contacts",
+    "Fetch contacts for a project",
+    {
+      projectId: z.string().describe("The ID of the project to fetch contacts for"),
+    },
+    async ({ projectId }) => {
+      const data = await fetchContacts(LUSKAD_API_URL, LUSKAD_API_KEY, projectId);
+      return {
+        content: [
+          {
+            type: "text",
+            text: handleApiToolResult(data, "Failed to retrieve contacts"),
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
     "get-features",
     "Fetch features and issues for a project",
     {
@@ -176,6 +143,31 @@ function createServerInstance() {
           {
             type: "text",
             text: handleApiToolResult(data, "Failed to retrieve features"),
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "get-progress",
+    "Get the progress for a project",
+    {
+      projectId: z.string().describe("The ID of the project to get the progress for"),
+      query: z.string().optional().describe("The query to search for features"),
+    },
+    async ({ projectId, query }) => {
+      const planning = await fetchPlanning(LUSKAD_API_URL, LUSKAD_API_KEY, projectId);
+      const progress = await fetchProgress(LUSKAD_API_URL, LUSKAD_API_KEY, projectId, query);
+      const data = {
+        planning: planning,
+        progress: progress,
+      };
+      return {
+        content: [
+          {
+            type: "text",
+            text: handleApiToolResult(data, "Failed to retrieve project progress"),
           },
         ],
       };
