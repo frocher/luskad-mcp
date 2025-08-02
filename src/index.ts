@@ -76,8 +76,9 @@ function createServerInstance() {
   server.registerTool(
     "get-current-date",
     {
-      title: "Current date",
-      description: "Get the current date",
+      title: "Get Current Date",
+      description:
+        "Retrieve the current date and time in ISO format for reference in project planning and scheduling",
       inputSchema: {},
     },
     async () => {
@@ -90,8 +91,9 @@ function createServerInstance() {
   server.registerTool(
     "list-projects",
     {
-      title: "List projects",
-      description: "List all projects",
+      title: "List All Projects",
+      description:
+        "Retrieve a comprehensive list of all projects in the system with their IDs, names, descriptions, and creation dates for project management overview",
       inputSchema: {},
     },
     async () => {
@@ -110,8 +112,9 @@ function createServerInstance() {
   server.registerTool(
     "get-coding-rules",
     {
-      title: "Fetch coding rules for a project",
-      description: "Fetch coding rules for a project",
+      title: "Fetch Coding Rules",
+      description:
+        "Retrieve coding standards, guidelines, and best practices for a specific project. Supports optional search queries to filter rules by keywords or topics",
       inputSchema: {
         projectId: z.string().describe("The ID of the project to fetch coding rules for"),
         query: z.string().optional().describe("The query to search for coding rules"),
@@ -133,8 +136,9 @@ function createServerInstance() {
   server.registerTool(
     "get-contacts",
     {
-      title: "Fetch contacts for a project",
-      description: "Fetch contacts for a project",
+      title: "Fetch Project Contacts",
+      description:
+        "Retrieve all contacts associated with a specific project, including their personal information, company details, roles, and notes for stakeholder management",
       inputSchema: {
         projectId: z.string().describe("The ID of the project to fetch contacts for"),
       },
@@ -155,8 +159,9 @@ function createServerInstance() {
   server.registerTool(
     "get-features",
     {
-      title: "Fetch features and issues for a project",
-      description: "Fetch features and issues for a project",
+      title: "Fetch Project Features & Issues",
+      description:
+        "Retrieve all features and issues for a specific project, including their status, priority, descriptions, and related metadata for project tracking and management",
       inputSchema: {
         projectId: z.string().describe("The ID of the project to fetch features for"),
       },
@@ -177,8 +182,9 @@ function createServerInstance() {
   server.registerTool(
     "get-progress",
     {
-      title: "Get the progress for a project",
-      description: "Get the progress for a project",
+      title: "Get Project Progress",
+      description:
+        "Retrieve comprehensive project progress metrics including completion status, throughput analysis, build time tracking, and projected completion dates for project planning and reporting",
       inputSchema: {
         projectId: z.string().describe("The ID of the project to get the progress for"),
         query: z.string().optional().describe("The query to search for features"),
@@ -205,8 +211,9 @@ function createServerInstance() {
   server.registerTool(
     "get-risks",
     {
-      title: "Fetch risks for a project",
-      description: "Fetch risks for a project",
+      title: "Fetch Project Risks",
+      description:
+        "Retrieve all identified risks for a specific project, including their severity, probability, impact assessment, and mitigation strategies for risk management",
       inputSchema: {
         projectId: z.string().describe("The ID of the project to fetch risks for"),
         query: z.string().optional().describe("The query to search for risks"),
@@ -228,8 +235,9 @@ function createServerInstance() {
   server.registerTool(
     "get-tasks",
     {
-      title: "Fetch tasks for a project",
-      description: "Fetch tasks for a project",
+      title: "Fetch Project Tasks",
+      description:
+        "Retrieve all tasks associated with a specific project, including their status, priority, assignments, deadlines, and progress tracking for task management",
       inputSchema: {
         projectId: z.string().describe("The ID of the project to fetch tasks for"),
         query: z.string().optional().describe("The query to search for tasks"),
@@ -251,8 +259,9 @@ function createServerInstance() {
   server.registerTool(
     "get-team-members",
     {
-      title: "Fetch team members for a project",
-      description: "Fetch team members for a project",
+      title: "Fetch Project Team Members",
+      description:
+        "Retrieve all team members assigned to a specific project, including their roles, skills, availability, and working schedules for team management and resource planning",
       inputSchema: {
         projectId: z.string().describe("The ID of the project to fetch team members for"),
       },
