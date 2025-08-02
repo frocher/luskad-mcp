@@ -193,6 +193,56 @@ function createServerInstance() {
     async ({ projectId, query }) => {
       const planning = await fetchPlanning(LUSKAD_API_URL, LUSKAD_API_KEY, projectId);
       const progress = await fetchProgress(LUSKAD_API_URL, LUSKAD_API_KEY, projectId, query);
+
+      // Replace null termination dates with descriptive messages
+      if (progress.termination_date.last_7_days === null) {
+        if (progress.remaining_days_to_complete.last_7_days === null) {
+          progress.termination_date.last_7_days =
+            "No termination date available. There was no activity in the last 7 days";
+        } else {
+          progress.termination_date.last_7_days =
+            "No termination date available. Not enough remaining days to complete the project.";
+        }
+      }
+      if (progress.termination_date.last_30_days === null) {
+        if (progress.remaining_days_to_complete.last_30_days === null) {
+          progress.termination_date.last_30_days =
+            "No termination date available. There was no activity in the last 30 days";
+        } else {
+          progress.termination_date.last_30_days =
+            "No termination date available. Not enough remaining days to complete the project.";
+        }
+      }
+      if (progress.termination_date.from_beginning === null) {
+        if (progress.remaining_days_to_complete.from_beginning === null) {
+          progress.termination_date.from_beginning =
+            "No termination date available. There was no activity since the beginning of the project";
+        } else {
+          progress.termination_date.from_beginning =
+            "No termination date available. Not enough remaining days to complete the project.";
+        }
+      }
+
+      // Also handle null remaining days
+      if (progress.remaining_days_to_complete.last_7_days === null) {
+        progress.remaining_days_to_complete.last_7_days = "Not enough activity in the last 7 days";
+      }
+      if (progress.remaining_days_to_complete.last_30_days === null) {
+        progress.remaining_days_to_complete.last_30_days = "Not enough activity in the last 30 days";
+      }
+      if (progress.remaining_days_to_complete.from_beginning === null) {
+        progress.remaining_days_to_complete.from_beginning = "Not enough activity since the beginning of the project";
+      }
+
+      // Handle throughput to put it in the format "dd.dd points per day"
+      progress.throughput.last_7_days = `${progress.throughput.last_7_days.toFixed(2)} points per day`;
+      progress.throughput.last_30_days = `${progress.throughput.last_30_days.toFixed(2)} points per day`;
+      progress.throughput.from_beginning = `${progress.throughput.from_beginning.toFixed(2)} points per day`;
+
+      // Handle remaining used_build_time and remaining_build_time to put it in the format "dd.dd days"
+      progress.used_build_time = `${progress.used_build_time.toFixed(2)} days`;
+      progress.remaining_build_time = `${progress.remaining_build_time.toFixed(2)} days`;
+
       const data = {
         planning: planning,
         progress: progress,
