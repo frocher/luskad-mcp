@@ -73,30 +73,49 @@ function createServerInstance() {
     },
   });
 
-  server.tool("get-current-date", "Get the current date", async () => {
-    return {
-      content: [{ type: "text", text: new Date().toISOString() }],
-    };
-  });
-
-  server.tool("list-projects", "List all projects", async () => {
-    const data = await listProjects(LUSKAD_API_URL, LUSKAD_API_KEY);
-    return {
-      content: [
-        {
-          type: "text",
-          text: handleApiToolResult(data, "Failed to retrieve projects"),
-        },
-      ],
-    };
-  });
-
-  server.tool(
-    "get-coding-rules",
-    "Fetch coding rules for a project",
+  server.registerTool(
+    "get-current-date",
     {
-      projectId: z.string().describe("The ID of the project to fetch coding rules for"),
-      query: z.string().optional().describe("The query to search for coding rules"),
+      title: "Current date",
+      description: "Get the current date",
+      inputSchema: {},
+    },
+    async () => {
+      return {
+        content: [{ type: "text", text: new Date().toISOString() }],
+      };
+    }
+  );
+
+  server.registerTool(
+    "list-projects",
+    {
+      title: "List projects",
+      description: "List all projects",
+      inputSchema: {},
+    },
+    async () => {
+      const data = await listProjects(LUSKAD_API_URL, LUSKAD_API_KEY);
+      return {
+        content: [
+          {
+            type: "text",
+            text: handleApiToolResult(data, "Failed to retrieve projects"),
+          },
+        ],
+      };
+    }
+  );
+
+  server.registerTool(
+    "get-coding-rules",
+    {
+      title: "Fetch coding rules for a project",
+      description: "Fetch coding rules for a project",
+      inputSchema: {
+        projectId: z.string().describe("The ID of the project to fetch coding rules for"),
+        query: z.string().optional().describe("The query to search for coding rules"),
+      },
     },
     async ({ projectId, query }) => {
       const data = await fetchCodingRules(LUSKAD_API_URL, LUSKAD_API_KEY, projectId, query);
@@ -111,11 +130,14 @@ function createServerInstance() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "get-contacts",
-    "Fetch contacts for a project",
     {
-      projectId: z.string().describe("The ID of the project to fetch contacts for"),
+      title: "Fetch contacts for a project",
+      description: "Fetch contacts for a project",
+      inputSchema: {
+        projectId: z.string().describe("The ID of the project to fetch contacts for"),
+      },
     },
     async ({ projectId }) => {
       const data = await fetchContacts(LUSKAD_API_URL, LUSKAD_API_KEY, projectId);
@@ -130,11 +152,14 @@ function createServerInstance() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "get-features",
-    "Fetch features and issues for a project",
     {
-      projectId: z.string().describe("The ID of the project to fetch features for"),
+      title: "Fetch features and issues for a project",
+      description: "Fetch features and issues for a project",
+      inputSchema: {
+        projectId: z.string().describe("The ID of the project to fetch features for"),
+      },
     },
     async ({ projectId }) => {
       const data = await fetchFeatures(LUSKAD_API_URL, LUSKAD_API_KEY, projectId);
@@ -149,12 +174,15 @@ function createServerInstance() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "get-progress",
-    "Get the progress for a project",
     {
-      projectId: z.string().describe("The ID of the project to get the progress for"),
-      query: z.string().optional().describe("The query to search for features"),
+      title: "Get the progress for a project",
+      description: "Get the progress for a project",
+      inputSchema: {
+        projectId: z.string().describe("The ID of the project to get the progress for"),
+        query: z.string().optional().describe("The query to search for features"),
+      },
     },
     async ({ projectId, query }) => {
       const planning = await fetchPlanning(LUSKAD_API_URL, LUSKAD_API_KEY, projectId);
@@ -174,12 +202,15 @@ function createServerInstance() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "get-risks",
-    "Fetch risks for a project",
     {
-      projectId: z.string().describe("The ID of the project to fetch risks for"),
-      query: z.string().optional().describe("The query to search for risks"),
+      title: "Fetch risks for a project",
+      description: "Fetch risks for a project",
+      inputSchema: {
+        projectId: z.string().describe("The ID of the project to fetch risks for"),
+        query: z.string().optional().describe("The query to search for risks"),
+      },
     },
     async ({ projectId, query }) => {
       const data = await fetchRisks(LUSKAD_API_URL, LUSKAD_API_KEY, projectId, query);
@@ -194,12 +225,15 @@ function createServerInstance() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "get-tasks",
-    "Fetch tasks for a project",
     {
-      projectId: z.string().describe("The ID of the project to fetch tasks for"),
-      query: z.string().optional().describe("The query to search for tasks"),
+      title: "Fetch tasks for a project",
+      description: "Fetch tasks for a project",
+      inputSchema: {
+        projectId: z.string().describe("The ID of the project to fetch tasks for"),
+        query: z.string().optional().describe("The query to search for tasks"),
+      },
     },
     async ({ projectId, query }) => {
       const data = await fetchTasks(LUSKAD_API_URL, LUSKAD_API_KEY, projectId, query);
@@ -214,11 +248,14 @@ function createServerInstance() {
     }
   );
 
-  server.tool(
+  server.registerTool(
     "get-team-members",
-    "Fetch team members for a project",
     {
-      projectId: z.string().describe("The ID of the project to fetch team members for"),
+      title: "Fetch team members for a project",
+      description: "Fetch team members for a project",
+      inputSchema: {
+        projectId: z.string().describe("The ID of the project to fetch team members for"),
+      },
     },
     async ({ projectId }) => {
       const data = await fetchTeamMembers(LUSKAD_API_URL, LUSKAD_API_KEY, projectId);
